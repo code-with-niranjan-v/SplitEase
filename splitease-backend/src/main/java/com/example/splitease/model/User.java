@@ -12,6 +12,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,6 +33,7 @@ public class User{
     private String name;
 
     @Column(nullable = false,unique = true)
+    @Email(message = "Invalid Email")
     private String email;
 
     @Column(nullable = false,unique = true)

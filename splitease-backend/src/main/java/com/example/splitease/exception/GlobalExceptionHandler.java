@@ -1,12 +1,16 @@
 package com.example.splitease.exception;
 
+import com.example.splitease.response.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -98,6 +102,28 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(response);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleValidationException(
+            MethodArgumentNotValidException methodArgumentNotValidException,
+            HttpServletRequest request
+    ) {
+        HashMap<String,String> map = new HashMap<>();
+        for(FieldError error:methodArgumentNotValidException.getBindingResult().getFieldErrors()){
+            map.put(error.getField(),error.getDefaultMessage());
+        }
+        ErrorResponse response = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                map.toString(),
+                "Validation Error",
+                request.getRequestURI()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(response);
     }
 }

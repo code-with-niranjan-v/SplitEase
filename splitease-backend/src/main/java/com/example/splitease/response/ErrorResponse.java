@@ -1,4 +1,4 @@
-package com.example.splitease.exception;
+package com.example.splitease.response;
 
 import java.time.LocalDateTime;
 

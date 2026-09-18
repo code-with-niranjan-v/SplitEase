@@ -3,6 +3,10 @@ package com.example.splitease.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.splitease.dto.AddMemberDTO;
+import com.example.splitease.exception.GroupNotFoundException;
+import com.example.splitease.exception.UserNotFoundException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.splitease.dto.AddGroupDTO;
@@ -32,5 +36,21 @@ public class GroupService {
 
         return null;
         
+    }
+
+    public void addMemberToGroup(AddMemberDTO addMemberDTO) throws UserNotFoundException,GroupNotFoundException {
+        if(userRepository.existsByPhoneNumber(addMemberDTO.getPhoneNumber())){
+            if(groupRepository.existsById(addMemberDTO.getGroupId())){
+                Group group = groupRepository.findById(addMemberDTO.getGroupId()).get();
+                User user = userRepository.findUserByPhoneNumber(addMemberDTO.getPhoneNumber()).get();
+                group.getMembers().add(user);
+                groupRepository.save(group);
+            }else{
+                throw new GroupNotFoundException("Group not Found.");
+            }
+        }else{
+            throw new UserNotFoundException("User Not Found");
+        }
+
     }
 }

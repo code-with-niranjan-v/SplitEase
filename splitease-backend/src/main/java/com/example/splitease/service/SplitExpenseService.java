@@ -26,8 +26,13 @@ public class SplitExpenseService {
             if(expenseRepository.existsById(splitExpenseDTO.getExpenseId())){
                 User user = userRepository.findById(splitExpenseDTO.getUserId()).get();
                 Expense expense = expenseRepository.findById(splitExpenseDTO.getExpenseId()).get();
-                SplitExpense splitExpense = new SplitExpense(null, expense, user, splitExpenseDTO.getShare(),PaymentStatus.DUE);
-                return splitExpenseRepository.save(splitExpense);
+                if(expense.getGroup().getMembers().contains(user)){
+                    SplitExpense splitExpense = new SplitExpense(null, expense, user, splitExpenseDTO.getShare(),PaymentStatus.DUE);
+                    return splitExpenseRepository.save(splitExpense);
+                }else{
+                    return null;
+                }
+
             }else{
                 return null;
             }
