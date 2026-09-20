@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.splitease.dto.AddMemberDTO;
+import com.example.splitease.dto.GroupListDTO;
 import com.example.splitease.exception.GroupNotFoundException;
 import com.example.splitease.exception.UserNotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -53,5 +54,19 @@ public class GroupService {
             throw new UserNotFoundException();
         }
 
+    }
+
+    public List<GroupListDTO> listGroups(Integer userId){
+        if(userRepository.existsById(userId)){
+            User user = userRepository.findById(userId).get();
+            List<GroupListDTO> groups = new ArrayList<>();
+            for(Group g: user.getGroups()){
+                GroupListDTO groupListDTO = new GroupListDTO(g.getGroupId(),g.getGroupName(),g.getMembers().size());
+                groups.add(groupListDTO);
+            }
+            return groups;
+        }else {
+            throw new UserNotFoundException();
+        }
     }
 }

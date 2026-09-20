@@ -7,5 +7,5 @@ import com.example.splitease.model.Group;
 
 @Repository
 public interface GroupRepository extends JpaRepository<Group,Integer>{
-    
+
 }
