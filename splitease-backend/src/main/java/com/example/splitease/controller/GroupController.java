@@ -26,14 +26,14 @@ public class GroupController {
     }
 
     @PostMapping("/create")
-    public Group addGroup(@RequestBody AddGroupDTO addGroupDTO){
-        return groupService.createGroup(addGroupDTO);
+    public ResponseEntity<?> addGroup(@RequestBody AddGroupDTO addGroupDTO){
+        return ResponseEntity.ok(new Response<String>(200,true, groupService.createGroup(addGroupDTO),null,LocalDateTime.now() ));
     }
 
     @PostMapping("/addmember")
     public ResponseEntity<?> addMember(@RequestBody AddMemberDTO addMemberDTO){
         groupService.addMemberToGroup(addMemberDTO);
-        return ResponseEntity.ok(new Response<String>(HttpStatus.OK.value(),"Success","User added to the group Successfully", LocalDateTime.now()));
+        return ResponseEntity.ok(new Response<String>(HttpStatus.OK.value(),true,"Success","User added to the group Successfully", LocalDateTime.now()));
     }
     
 }

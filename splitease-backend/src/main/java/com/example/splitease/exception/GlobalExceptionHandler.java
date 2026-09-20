@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
     ) {
         ErrorResponse response = new ErrorResponse(
                 LocalDateTime.now(),
-                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.value(),false,
                 HttpStatus.NOT_FOUND.getReasonPhrase(),
                 exception.getMessage(),
                 request.getRequestURI()
@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
     ) {
         ErrorResponse response = new ErrorResponse(
                 LocalDateTime.now(),
-                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.value(),false,
                 HttpStatus.NOT_FOUND.getReasonPhrase(),
                 exception.getMessage(),
                 request.getRequestURI()
@@ -58,7 +58,7 @@ public class GlobalExceptionHandler {
     ) {
         ErrorResponse response = new ErrorResponse(
                 LocalDateTime.now(),
-                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.value(),false,
                 HttpStatus.NOT_FOUND.getReasonPhrase(),
                 exception.getMessage(),
                 request.getRequestURI()
@@ -76,7 +76,7 @@ public class GlobalExceptionHandler {
     ) {
         ErrorResponse response = new ErrorResponse(
                 LocalDateTime.now(),
-                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.value(),false,
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 exception.getMessage(),
                 request.getRequestURI()
@@ -94,9 +94,9 @@ public class GlobalExceptionHandler {
     ) {
         ErrorResponse response = new ErrorResponse(
                 LocalDateTime.now(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),false,
                 HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-                "An unexpected error occurred",
+                exception.getMessage(),
                 request.getRequestURI()
         );
 
@@ -116,7 +116,7 @@ public class GlobalExceptionHandler {
         }
         ErrorResponse response = new ErrorResponse(
                 LocalDateTime.now(),
-                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.value(),false,
                 map.toString(),
                 "Validation Error",
                 request.getRequestURI()

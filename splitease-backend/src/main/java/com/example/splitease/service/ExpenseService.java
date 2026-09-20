@@ -1,5 +1,7 @@
 package com.example.splitease.service;
 
+import com.example.splitease.exception.GroupNotFoundException;
+import com.example.splitease.exception.UserNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.example.splitease.dto.AddExpenseDTO;
@@ -20,21 +22,21 @@ public class ExpenseService {
     public final GroupRepository groupRepository;
     public final UserRepository userRepository;
 
-    public Expense addExpense(AddExpenseDTO addExpenseDTO){
+    public String addExpense(AddExpenseDTO addExpenseDTO){
         if(userRepository.existsById(addExpenseDTO.getUserId())){
             if(groupRepository.existsById(addExpenseDTO.getGroupId())){
                 User user = userRepository.findById(addExpenseDTO.getUserId()).get();
                 Group group = groupRepository.findById(addExpenseDTO.getGroupId()).get();
                 Expense expense = new Expense(null,group,user,addExpenseDTO.getDescription(),addExpenseDTO.getTotalAmount(),addExpenseDTO.getOwnersShare());
-                return expenseRepository.save(expense);
+                expenseRepository.save(expense);
+                return "Expense was created.";
             }
             else{
-                System.out.println("Error 2");
-                return null;
+                throw new GroupNotFoundException("Group not found.");
             }
         }else{
             System.out.println("Error 1");
-            return null;
+            throw new UserNotFoundException();
         }
     }
 

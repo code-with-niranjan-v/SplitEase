@@ -14,6 +14,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,9 +38,11 @@ public class User{
     private String email;
 
     @Column(nullable = false,unique = true)
+    @Size(min = 10,max = 10,message = "Invalid Phone Number.")
     private String phoneNumber;
 
     @Column(nullable = false)
+    @Size(min = 8,message = "Password length must be atleast 8.")
     private String password;
 
     @Column(nullable = true)

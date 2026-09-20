@@ -25,16 +25,17 @@ public class GroupService {
         this.userRepository = userRepository;
     }
 
-    public Group createGroup(AddGroupDTO addGroupDTO){
+    public String createGroup(AddGroupDTO addGroupDTO){
         List<User> users = new ArrayList<>();
         if(userRepository.existsById(addGroupDTO.getUserId())){
             User user = userRepository.findById(addGroupDTO.getUserId()).get();
             users.add(user);
             Group group = new Group(null,addGroupDTO.getGroupName(),user,null,users);
-            return groupRepository.save(group);
+            groupRepository.save(group);
+            return "Group Created Successfully.";
         }
 
-        return null;
+        throw new UserNotFoundException();
         
     }
 
@@ -49,7 +50,7 @@ public class GroupService {
                 throw new GroupNotFoundException("Group not Found.");
             }
         }else{
-            throw new UserNotFoundException("User Not Found");
+            throw new UserNotFoundException();
         }
 
     }

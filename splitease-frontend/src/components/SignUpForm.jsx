@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from 'axios';
 import {toast} from 'react-toastify'
+import { signUp } from "../services/userService";
 export default function SignUpForm(){
     const [name,setName] = useState("");
     const [email,setEmail] = useState("");
@@ -16,9 +17,9 @@ export default function SignUpForm(){
             name,email,"phoneNumber":phone,password
         }
 
-        const res = await axios.post("http://localhost:8081/api/users/signup",user);
+        const res = await signUp(user);
 
-        if(res.data){
+        if(res.success){
             toast.success("Sign Up Successfull!",{
                 "position":'top-right',
                 "autoClose":3000

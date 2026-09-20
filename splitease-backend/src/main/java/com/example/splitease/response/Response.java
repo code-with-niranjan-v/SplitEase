@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class Response<T> {
     private Integer status;
+    private Boolean success;
     private String message;
     private T data;
     private LocalDateTime timeStamp;

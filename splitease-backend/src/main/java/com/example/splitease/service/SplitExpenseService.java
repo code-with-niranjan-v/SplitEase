@@ -1,5 +1,8 @@
 package com.example.splitease.service;
 
+import com.example.splitease.exception.ExpenseNotFoundException;
+import com.example.splitease.exception.SplitExpenseNotFoundException;
+import com.example.splitease.exception.UserNotFoundException;
 import com.example.splitease.model.User;
 import org.springframework.stereotype.Service;
 
@@ -21,34 +24,36 @@ public class SplitExpenseService {
     public final ExpenseRepository expenseRepository;
     public final SplitExpenseRepository splitExpenseRepository;
 
-    public SplitExpense createNewSplitExpense(SplitExpenseDTO splitExpenseDTO){
+    public String createNewSplitExpense(SplitExpenseDTO splitExpenseDTO){
         if(userRepository.existsById(splitExpenseDTO.getUserId())){
             if(expenseRepository.existsById(splitExpenseDTO.getExpenseId())){
                 User user = userRepository.findById(splitExpenseDTO.getUserId()).get();
                 Expense expense = expenseRepository.findById(splitExpenseDTO.getExpenseId()).get();
                 if(expense.getGroup().getMembers().contains(user)){
                     SplitExpense splitExpense = new SplitExpense(null, expense, user, splitExpenseDTO.getShare(),PaymentStatus.DUE);
-                    return splitExpenseRepository.save(splitExpense);
+                    splitExpenseRepository.save(splitExpense);
+                    return "Split expense was created.";
                 }else{
-                    return null;
+                    return "The User is not in the group.";
                 }
 
             }else{
-                return null;
+                throw new ExpenseNotFoundException();
             }
         }else{
-            return null;
+            throw new UserNotFoundException();
         }
     }
 
-    public SplitExpense updateStatus(Integer id) {
+    public String updateStatus(Integer id) throws SplitExpenseNotFoundException {
         if(splitExpenseRepository.existsById(id)){
             SplitExpense splitExpense = splitExpenseRepository.findById(id).get();
             splitExpense.setStatus(PaymentStatus.PAID);
-            return splitExpenseRepository.save(splitExpense);
+            splitExpenseRepository.save(splitExpense);
+            return "Expense was paid.";
 
         }else{
-            return null;
+            throw new SplitExpenseNotFoundException();
         }
     }
 }
