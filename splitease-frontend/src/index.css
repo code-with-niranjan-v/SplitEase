@@ -7,6 +7,121 @@
   width: 100%;
   
 }
+.top-bar{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  
+}
+
+.navbar-item{
+  display: flex;
+  align-items: center;
+  color: white;
+  column-gap: 5px
+}
+
+.navbar-item-selected{
+  display: flex;
+  align-items: center;
+  color: orange;
+  column-gap: 5px;
+  
+}
+
+.modal-overlay{
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: grid;
+  place-items: center;
+
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.profile{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 10px;
+  color: white;
+  margin-right: 10px;
+}
+.home{
+  display: flex;
+  flex-direction: column;
+}
+
+.welcome-msg{
+  color: white;
+}
+
+.menu{
+  flex: 8;
+}
+
+.welcome{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.create-group-btn{
+  background-color: orange;
+  height: 40px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  padding: 5px;
+  font-weight: bold;
+}
+
+.group{
+  color: white;
+  background-color: #546A7B;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.group-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+
+.content{
+  display: flex;
+  flex-direction: row;
+}
+
+.navbar{
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.profile-logo{
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #546A7B;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 10px;
+  margin-left: 10px;
+}
 
 .signUpTitle{
   font-weight: bold;

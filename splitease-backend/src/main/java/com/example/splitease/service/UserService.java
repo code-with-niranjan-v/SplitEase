@@ -4,6 +4,7 @@ import com.example.splitease.dto.LoginDTO;
 import com.example.splitease.model.User;
 import com.example.splitease.repository.UserRepository;
 import com.example.splitease.response.Response;
+import com.example.splitease.security.service.UserPrincipal;
 import com.example.splitease.security.util.JwtUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -39,8 +40,8 @@ public class UserService {
     public ResponseEntity<?> login(LoginDTO loginDTO){
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsername(),loginDTO.getPassword()));
         if(authentication.isAuthenticated()){
-            UserDetails user = (UserDetails) authentication.getPrincipal();
-            return ResponseEntity.ok(new Response<Map<String,String>>(200,true,"Login Successfully", Map.of("token",jwtUtil.generateToken(loginDTO.getUsername()),"email",user.getUsername()), LocalDateTime.now()));
+            UserPrincipal user = (UserPrincipal) authentication.getPrincipal();
+            return ResponseEntity.ok(new Response<Map<String,String>>(200,true,"Login Successfully", Map.of("token",jwtUtil.generateToken(loginDTO.getUsername()),"email",user.getUsername(),"userId",user.getUser().getId().toString()), LocalDateTime.now()));
         }else{
             return ResponseEntity.badRequest().body(new Response<String>(401,false,"Login Failed","",LocalDateTime.now()));
         }
