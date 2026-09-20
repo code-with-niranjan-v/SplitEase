@@ -41,7 +41,7 @@ public class UserService {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsername(),loginDTO.getPassword()));
         if(authentication.isAuthenticated()){
             UserPrincipal user = (UserPrincipal) authentication.getPrincipal();
-            return ResponseEntity.ok(new Response<Map<String,String>>(200,true,"Login Successfully", Map.of("token",jwtUtil.generateToken(loginDTO.getUsername()),"email",user.getUsername(),"userId",user.getUser().getId().toString()), LocalDateTime.now()));
+            return ResponseEntity.ok(new Response<Map<String,String>>(200,true,"Login Successfully", Map.of("token",jwtUtil.generateToken(loginDTO.getUsername()),"email",user.getUsername(),"userId",user.getUser().getId().toString(),"name",user.getUser().getName()), LocalDateTime.now()));
         }else{
             return ResponseEntity.badRequest().body(new Response<String>(401,false,"Login Failed","",LocalDateTime.now()));
         }

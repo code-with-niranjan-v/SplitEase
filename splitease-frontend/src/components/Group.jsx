@@ -1,8 +1,16 @@
-export default function Group(){
-    return (<div className="group">
-        <div>
-            <h3>Group name</h3>
-            <p>Total Members: 5</p>
-        </div>
-    </div>);
+import { useNavigate } from "react-router-dom";
+export default function Group({ groupName, totalMembers, groupId }) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/groups/${groupId}`);
+  };
+  return (
+    <div className="group" onClick={handleClick}>
+      <div>
+        <h3>{groupName}</h3>
+        <p>Total Members: {totalMembers}</p>
+      </div>
+    </div>
+  );
 }

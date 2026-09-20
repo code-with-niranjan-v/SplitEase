@@ -32,6 +32,8 @@ public class SplitExpenseService {
                 if(expense.getGroup().getMembers().contains(user)){
                     SplitExpense splitExpense = new SplitExpense(null, expense, user, splitExpenseDTO.getShare(),PaymentStatus.DUE);
                     splitExpenseRepository.save(splitExpense);
+                    expense.getSplits().add(splitExpense);
+                    expenseRepository.save(expense);
                     return "Split expense was created.";
                 }else{
                     return "The User is not in the group.";

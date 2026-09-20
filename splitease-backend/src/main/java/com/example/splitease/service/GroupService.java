@@ -3,28 +3,26 @@ package com.example.splitease.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.splitease.dto.AddMemberDTO;
-import com.example.splitease.dto.GroupListDTO;
+import com.example.splitease.dto.*;
 import com.example.splitease.exception.GroupNotFoundException;
 import com.example.splitease.exception.UserNotFoundException;
+import com.example.splitease.model.*;
+import com.example.splitease.repository.ExpenseRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.example.splitease.dto.AddGroupDTO;
-import com.example.splitease.model.Group;
-import com.example.splitease.model.User;
 import com.example.splitease.repository.GroupRepository;
 import com.example.splitease.repository.UserRepository;
 
 @Service
+@AllArgsConstructor
 public class GroupService {
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
+    private final ExpenseRepository expenseRepository;
 
-    public GroupService(GroupRepository groupRepository, UserRepository userRepository){
-        this.groupRepository = groupRepository;
-        this.userRepository = userRepository;
-    }
+
 
     public String createGroup(AddGroupDTO addGroupDTO){
         List<User> users = new ArrayList<>();
@@ -67,6 +65,53 @@ public class GroupService {
             return groups;
         }else {
             throw new UserNotFoundException();
+        }
+    }
+
+    public GroupDetailDTO getGroupDetails(Integer id,User currentUser){
+        if(groupRepository.existsById(id)){
+            Group group = groupRepository.findById(id).get();
+            List<Expense> expenses = expenseRepository.findExpenseByGroup(group);
+            List<MemberDTO> members = new ArrayList<>();
+            for(User user:group.getMembers()){
+                MemberDTO memberDTO = new MemberDTO(user.getId(), user.getName(), user.getEmail());
+                members.add(memberDTO);
+            }
+            Double totalExpense = 0.00;
+            Double yourShare = 0.00;
+            Double youOwe = 0.00;
+            Double youGet = 0.00;
+            List<ExpenseDTO> expenseDTOList = new ArrayList<>();
+            for(Expense expense:expenses){
+                Double currentShare = 0.00;
+                String status = "";
+                Integer splitId = 0;
+                for(SplitExpense splitExpense:expense.getSplits()){
+                    if(splitExpense.getUser().getId().equals(currentUser.getId())){
+                        yourShare += splitExpense.getShare();
+                        currentShare = splitExpense.getShare();
+                        status = splitExpense.getStatus().toString();
+                        if (splitExpense.getStatus() == PaymentStatus.DUE) {
+                            youOwe += splitExpense.getShare();
+                        }
+                        splitId = splitExpense.getId();
+                    }
+                }
+
+                if(expense.getPaidBy().getId().equals(currentUser.getId())){
+                    youGet += (expense.getTotalAmount() - expense.getOwnersShare());
+                    currentShare = expense.getOwnersShare();
+                    status = PaymentStatus.PAID.toString();
+                }
+                totalExpense += expense.getTotalAmount();
+                MemberDTO memberDTO = new MemberDTO(expense.getPaidBy().getId(),expense.getPaidBy().getName(),expense.getPaidBy().getEmail());
+                ExpenseDTO expenseDTO = new ExpenseDTO(expense.getId(),expense.getDescription(),expense.getTotalAmount(),memberDTO,currentShare,status,splitId);
+                expenseDTOList.add(expenseDTO);
+            }
+            return new GroupDetailDTO(id,group.getGroupName(),members,totalExpense,yourShare,youOwe,youGet,expenseDTOList);
+
+        }else{
+            throw new GroupNotFoundException("Group not found.");
         }
     }
 }

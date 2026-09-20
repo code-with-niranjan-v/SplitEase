@@ -2,6 +2,7 @@ package com.example.splitease.service;
 
 import com.example.splitease.exception.GroupNotFoundException;
 import com.example.splitease.exception.UserNotFoundException;
+import com.example.splitease.model.SplitExpense;
 import org.springframework.stereotype.Service;
 
 import com.example.splitease.dto.AddExpenseDTO;
@@ -13,6 +14,8 @@ import com.example.splitease.repository.GroupRepository;
 import com.example.splitease.repository.UserRepository;
 
 import lombok.AllArgsConstructor;
+
+import java.util.ArrayList;
 
 @Service
 @AllArgsConstructor
@@ -27,7 +30,7 @@ public class ExpenseService {
             if(groupRepository.existsById(addExpenseDTO.getGroupId())){
                 User user = userRepository.findById(addExpenseDTO.getUserId()).get();
                 Group group = groupRepository.findById(addExpenseDTO.getGroupId()).get();
-                Expense expense = new Expense(null,group,user,addExpenseDTO.getDescription(),addExpenseDTO.getTotalAmount(),addExpenseDTO.getOwnersShare());
+                Expense expense = new Expense(null,group,user,addExpenseDTO.getDescription(),addExpenseDTO.getTotalAmount(),addExpenseDTO.getOwnersShare(),new ArrayList<SplitExpense>());
                 expenseRepository.save(expense);
                 return "Expense was created.";
             }

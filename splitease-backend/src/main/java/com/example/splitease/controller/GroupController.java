@@ -1,13 +1,14 @@
 package com.example.splitease.controller;
 
-import com.example.splitease.dto.AddMemberDTO;
-import com.example.splitease.dto.GroupListDTO;
+import com.example.splitease.dto.*;
+import com.example.splitease.model.User;
 import com.example.splitease.response.Response;
+import com.example.splitease.security.service.UserPrincipal;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.splitease.dto.AddGroupDTO;
 import com.example.splitease.model.Group;
 import com.example.splitease.service.GroupService;
 
@@ -35,9 +36,14 @@ public class GroupController {
         return ResponseEntity.ok(new Response<String>(HttpStatus.OK.value(),true,"Success","User added to the group Successfully", LocalDateTime.now()));
     }
 
-    @GetMapping("/list")
-    public ResponseEntity<?> getGroupListing(@RequestBody Integer userId){
-        return ResponseEntity.ok(new Response<List<GroupListDTO>>(200,true,"Groups retrieved.",groupService.listGroups(userId),LocalDateTime.now()));
+    @PostMapping("/list")
+    public ResponseEntity<?> getGroupListing(@RequestBody GroupListRequestDTO groupListRequestDTO){
+        return ResponseEntity.ok(new Response<List<GroupListDTO>>(200,true,"Groups retrieved.",groupService.listGroups(groupListRequestDTO.getUserId()),LocalDateTime.now()));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getGroupById(@PathVariable Integer id, @AuthenticationPrincipal UserPrincipal user){
+        return ResponseEntity.ok(new Response<GroupDetailDTO>(200,true,"Group Details Retrieved.",groupService.getGroupDetails(id,user.getUser()),LocalDateTime.now()));
     }
     
 }
