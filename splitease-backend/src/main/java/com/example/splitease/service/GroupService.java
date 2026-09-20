@@ -102,6 +102,7 @@ public class GroupService {
                     youGet += (expense.getTotalAmount() - expense.getOwnersShare());
                     currentShare = expense.getOwnersShare();
                     status = PaymentStatus.PAID.toString();
+                    yourShare += expense.getOwnersShare();
                 }
                 totalExpense += expense.getTotalAmount();
                 MemberDTO memberDTO = new MemberDTO(expense.getPaidBy().getId(),expense.getPaidBy().getName(),expense.getPaidBy().getEmail());
