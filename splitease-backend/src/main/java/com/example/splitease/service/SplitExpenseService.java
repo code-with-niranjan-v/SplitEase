@@ -1,6 +1,7 @@
 package com.example.splitease.service;
 
 import com.example.splitease.exception.ExpenseNotFoundException;
+import com.example.splitease.exception.MemberNotInGroupException;
 import com.example.splitease.exception.SplitExpenseNotFoundException;
 import com.example.splitease.exception.UserNotFoundException;
 import com.example.splitease.model.User;
@@ -36,7 +37,7 @@ public class SplitExpenseService {
                     expenseRepository.save(expense);
                     return "Split expense was created.";
                 }else{
-                    return "The User is not in the group.";
+                    throw new MemberNotInGroupException();
                 }
 
             }else{

@@ -22,7 +22,7 @@ export default function NavBar({ selected, setSelected }) {
         <GrGroup />
         <p>Group</p>
       </div>
-      <div
+      {/* <div
         onClick={() => {
           setSelected("settings");
         }}
@@ -32,7 +32,7 @@ export default function NavBar({ selected, setSelected }) {
       >
         <IoIosSettings />
         <p>Settings</p>
-      </div>
+      </div> */}
     </div>
   );
 }
