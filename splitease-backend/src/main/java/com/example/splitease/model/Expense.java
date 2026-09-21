@@ -31,7 +31,7 @@ public class Expense {
     @Column(nullable = false)
     private Double ownersShare;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
     private List<SplitExpense> splits;
 
 

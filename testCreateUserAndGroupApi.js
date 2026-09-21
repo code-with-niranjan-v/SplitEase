@@ -13,6 +13,13 @@ const user2 = {
     "password":"12345678"
 }
 
+const user3 = {
+    "name":"Khadir",
+    "email":"abc3@gmail.com",
+    "phoneNumber":"1234567830",
+    "password":"12345678"
+}
+
 async function registerUser(user){
     fetch("http://localhost:8081/api/users/signup",{
     method:"POST",
@@ -25,3 +32,4 @@ async function registerUser(user){
 
 await registerUser(user1)
 await registerUser(user2)
+await registerUser(user3)

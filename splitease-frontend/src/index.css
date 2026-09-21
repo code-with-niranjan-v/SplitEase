@@ -1003,3 +1003,11 @@ body{
     padding: 20px;
   }
 }
+
+.delete-btn{
+  background-color: #0b1f2d;
+  border-color: red;
+  color: red;
+  padding: 10px;
+  border-radius: 10px;
+}

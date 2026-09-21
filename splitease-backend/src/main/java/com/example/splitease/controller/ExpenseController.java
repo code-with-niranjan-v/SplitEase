@@ -1,11 +1,10 @@
 package com.example.splitease.controller;
 
+import com.example.splitease.dto.DeleteExpenseDTO;
+import com.example.splitease.exception.SplitExpenseNotFoundException;
 import com.example.splitease.response.Response;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.splitease.dto.AddExpenseDTO;
 import com.example.splitease.model.Expense;
@@ -26,6 +25,16 @@ public class ExpenseController {
     @PostMapping("/add")
     public ResponseEntity<?> createNewExpense(@RequestBody AddExpenseDTO addExpenseDTO){
         return ResponseEntity.ok(new Response<String>(200,true,expenseService.addExpense(addExpenseDTO),null, LocalDateTime.now()));
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteExpense(@RequestBody DeleteExpenseDTO deleteExpenseDTO) throws SplitExpenseNotFoundException {
+        return ResponseEntity.ok(new Response<String>(200,true,expenseService.deleteExpense(deleteExpenseDTO),null,LocalDateTime.now()));
+    }
+
+    @PostMapping("/auto")
+    public ResponseEntity<?> autoSplitExpense(@RequestBody AddExpenseDTO addExpenseDTO){
+        return ResponseEntity.ok(new Response<String>(200,true,expenseService.autoSplitExpense(addExpenseDTO),null,LocalDateTime.now()));
     }
 
 

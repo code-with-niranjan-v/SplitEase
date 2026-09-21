@@ -7,24 +7,38 @@ import { fetchGroupDetail } from "../services/groupService";
 import MemberModal from "./MemberModal";
 import ExpenseModal from "./ExpenseModal";
 import SplitModal from "./SplitModal";
-import { updatePaid } from "../services/expenseService";
+import { deleteExpense, updatePaid } from "../services/expenseService";
 
 export default function GroupDetail() {
   const { groupId } = useParams();
   const navigate = useNavigate();
-
   const [expenseModal, setExpenseModal] = useState(false);
   const [group, setGroup] = useState(null);
   const [loading, setLoading] = useState(true);
   const [memberModal, setMemberModal] = useState(false);
-
+  const [reload,setReload] = useState(false);
   const [splitModal, setSplitModal] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState(null);
 
   useEffect(() => {
     fetchGroup();
-  }, [groupId]);
-
+  }, [groupId,reload]);
+  const handleExpense = async (expense)=>{
+    const token = localStorage.getItem("token");
+    if(localStorage.getItem("userId")!=expense.paidBy.id){
+      toast.error("You cant delete this.")
+      return;
+    }
+    console.log(expense);
+    const expenseSplit = { "expenseId":expense.id,"splitId":expense.splitId };
+    const res = await deleteExpense(expenseSplit,token);
+    if(res.success){
+      toast.success("Expense Deleted!");
+      setReload(true);
+    }else{
+      toast.error("Expense Deletion Failed.")
+    }
+  }
   const fetchGroup = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -49,6 +63,7 @@ export default function GroupDetail() {
     const res = await updatePaid(expense.splitId, token);
     if (res.success) {
       toast.success(`Payment of ₹${expense.yourShare || 0} marked as paid`);
+      setReload(true);
     } else {
       toast.error("Payment Update Failed.");
     }
@@ -110,16 +125,18 @@ export default function GroupDetail() {
       </div>
 
       {memberModal && (
-        <MemberModal groupId={groupId} setModal={setMemberModal} />
+        <MemberModal reload={reload} setReload={setReload} groupId={groupId} setModal={setMemberModal} />
       )}
 
       {expenseModal && (
-        <ExpenseModal setModal={setExpenseModal} groupId={groupId} />
+        <ExpenseModal setReload={setReload} reload={reload} setModal={setExpenseModal} groupId={groupId} />
       )}
 
       {splitModal && selectedExpense && (
         <SplitModal
           setModal={closeSplitModal}
+          setReload={setReload}
+          reload={reload}
           expense={selectedExpense}
           members={group.members}
         />
@@ -171,6 +188,7 @@ export default function GroupDetail() {
                     <th>Your Share</th>
                     <th>Status</th>
                     <th>Split</th>
+                    <th>Modify</th>
                   </tr>
                 </thead>
 
@@ -201,13 +219,13 @@ export default function GroupDetail() {
 
                       <td>
                         {expense.status == "PAID" ? (
-                          <span className="paid-status">✓ Paid</span>
+                          <span className="paid-status">Paid</span>
                         ) : (
                           <button
                             className="paid-btn"
                             onClick={() => handlePaid(expense)}
                           >
-                            Paid
+                            Pay
                           </button>
                         )}
                       </td>
@@ -222,6 +240,7 @@ export default function GroupDetail() {
                             : "Not Owned"}
                         </button>
                       </td>
+                      <td><button className="delete-btn" onClick={()=>{handleExpense(expense)}}>Delete</button></td>
                     </tr>
                   ))}
                 </tbody>

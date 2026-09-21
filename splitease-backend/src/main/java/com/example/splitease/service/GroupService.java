@@ -9,7 +9,10 @@ import com.example.splitease.exception.UserNotFoundException;
 import com.example.splitease.model.*;
 import com.example.splitease.repository.ExpenseRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
 import com.example.splitease.repository.GroupRepository;
@@ -17,6 +20,7 @@ import com.example.splitease.repository.UserRepository;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class GroupService {
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
@@ -31,6 +35,7 @@ public class GroupService {
             users.add(user);
             Group group = new Group(null,addGroupDTO.getGroupName(),user,null,users);
             groupRepository.save(group);
+            log.info("Group Created by User with Id "+addGroupDTO.getUserId()+".");
             return "Group Created Successfully.";
         }
 
@@ -45,6 +50,7 @@ public class GroupService {
                 User user = userRepository.findUserByPhoneNumber(addMemberDTO.getPhoneNumber()).get();
                 group.getMembers().add(user);
                 groupRepository.save(group);
+                log.info("User added to group with group ID: "+addMemberDTO.getGroupId());
             }else{
                 throw new GroupNotFoundException("Group not Found.");
             }

@@ -7,7 +7,7 @@ export default function Dashboard() {
   const [isModalOpen, setModal] = useState(false);
   const [groups, setGroups] = useState([]);
   const [name, setName] = useState("");
-
+  const [reload,setReload] = useState(false);
   useEffect(() => {
     const fetchGroups = async () => {
       const token = localStorage.getItem("token");
@@ -23,7 +23,7 @@ export default function Dashboard() {
     };
 
     fetchGroups();
-  }, []);
+  }, [reload]);
   return (
     <div className="dashboard">
       <div>
@@ -56,7 +56,10 @@ export default function Dashboard() {
             })}
           </div>
         )}
-        {isModalOpen && <GroupForm setModal={setModal} />}
+        {isModalOpen && <GroupForm                   
+                  reload={reload}
+                  setReload={setReload} 
+                  setModal={setModal} />}
       </div>
     </div>
   );

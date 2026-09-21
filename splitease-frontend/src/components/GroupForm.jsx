@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createGroup } from "../services/groupService";
 import { toast } from "react-toastify";
-export default function GroupForm({setModal}){
+export default function GroupForm({setModal,reload,setReload}){
     const [groupName,setGroupName] = useState();
     const handleCreateGroup = async ()=>{
         const userId = localStorage.getItem("userId");
@@ -9,6 +9,7 @@ export default function GroupForm({setModal}){
         const res = await createGroup(group);
         if(res.success){
             toast.success("Group Created!");
+            setReload(!reload)
         }else{
             toast.error("Group Creation Failed!")
         }

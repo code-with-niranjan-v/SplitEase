@@ -2,7 +2,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { addSplit } from "../services/expenseService";
 
-export default function SplitModal({ setModal, expense, members }) {
+export default function SplitModal({ setModal, expense, members,setReload,reload }) {
   const [userId, setUserId] = useState("");
   const [share, setShare] = useState("");
 
@@ -29,6 +29,7 @@ export default function SplitModal({ setModal, expense, members }) {
 
     if (res.success) {
       toast.success("Split added!");
+      setReload(!reload);
     }
 
     setModal(false);

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { addMember } from "../services/groupService";
-export default function MemberModal({ setModal, groupId }) {
+export default function MemberModal({ setModal, groupId ,reload,setReload}) {
   const [phone, setPhone] = useState("");
   const handleAddMember = async () => {
     const group = { "phoneNumber":phone, groupId };
@@ -9,6 +9,7 @@ export default function MemberModal({ setModal, groupId }) {
     const res = await addMember(token, group);
     if (res.success) {
       toast.success("Member Added!");
+      setReload(!reload)
     } else {
       toast.error("Member Adding Failed!");
     }
